@@ -1,0 +1,20 @@
+Hi Max,
+ 
+The module version with the specified components is targetted at typical rooftop solar panels that have a Voc on the order of 30 V to 70 V and an Isc of 7 A to 10 A.  The actual values where the ADC maxes out are 105 V and 13.1 A.
+ 
+Your panel has a voltage that is about 1/10 and a current that is about 1/200 of the typical rooftop PV modules.  This really won't work without some changes. Fortunately, they should be simple changes.
+ 
+The cell version is actually designed to deal with PV cells that have an Isc that is the same as the Isc of a full module, but a Voc that is 1/60 or 1/72 of that of a full module (i.e. one of the cells that a rooftop PV module is built from). That is a difficult problem.
+ 
+In your case, since the Isc is scaled down more than the Voc, that problem doesn't exist, and the module version should work ok if you use different component values:
+ 
+   - To handle the ~1/200 ratio of Isc, the Shunt resistor should be 0.005Ω x 200 = 1.00 Ω
+   - To handle the ~1/10 ratio of Voc, resistor R1 should be changed from 150kΩ to 7.5kΩ. This changes the voltage divider from 1/21 to 1/2, which is close enough.
+ 
+Additionally, the load capacitors might need to change, but I think they will be ok. Because of the very low current, they will take proportionally longer to charge up, so the time it takes to generate the IV curve will be longer. I think it should still be under one second for most curves, however, so if speed isn't critical for you, then you should be ok with the 1000uF caps.  You probably could use 50uF caps, and it would be faster, but the software has a 1 curve per second limit anyway. I would go ahead and build it with the 1000uF caps and see how it works.
+ 
+For the 1.00 Ω shunt resistor, you could just use a normal 1/4 W resistor if 5% accuracy is ok. If you have a way to calibrate, then you can compensate anyway. Otherwise, you might need to order a 1.00 Ω current sense resistor from DigiKey.
+ 
+I need to spend a bit more time to make sure I've thought this through correctly, but I think you'll be ok with these changes.
+ 
+  - Chris 
